@@ -3,7 +3,6 @@ package com.erayucar.smsreadermaster.data.remote
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 
 
@@ -13,8 +12,8 @@ interface MessageDao {
     @Insert
     suspend fun insertMessage(vararg message: SmsMessageModel)
 
-    @Update
-    suspend fun updateMessage(message: SmsMessageModel)
+    @Query("UPDATE message SET sender = :sender,body = :body WHERE uuid = :uuid")
+    suspend fun updateMessage(sender: String, body: String, uuid: Int)
 
     @Query("SELECT * FROM message")
     suspend fun getAllMessages(): List<SmsMessageModel>

@@ -8,12 +8,12 @@ import javax.inject.Inject
 class DbRepositoryImp @Inject constructor(
     private val messageDao: MessageDao
 ) : DbRepository {
-    override suspend fun insertMessage(message: SmsMessageModel){
-         messageDao.insertMessage(message)
+    override suspend fun insertMessage(message: SmsMessageModel) {
+        messageDao.insertMessage(message)
     }
 
-    override suspend fun updateMessage(message: SmsMessageModel) {
-        messageDao.updateMessage(message)
+    override suspend fun updateMessage(sender: String, body: String, uuid: Int) {
+        messageDao.updateMessage(sender, body, uuid)
     }
 
     override suspend fun getAllMessages(): List<SmsMessageModel> {

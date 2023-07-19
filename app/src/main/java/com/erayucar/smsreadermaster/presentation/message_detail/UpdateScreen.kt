@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -17,10 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import com.erayucar.smsreadermaster.presentation.viewmodel.SmsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,11 +41,11 @@ fun UpdateScreen(
     }
 
     val state = viewModel.updateMessage.value
-   LaunchedEffect(key1 = true, block = {
+    LaunchedEffect(key1 = true, block = {
 
-       viewModel.getMessage(uuid)
+        viewModel.getMessage(uuid)
 
-   })
+    })
 
 
 
@@ -57,22 +59,23 @@ fun UpdateScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TextField(
-                label = { Text(text = "Gönderen" +"   "+"(${state.sender})")},
+                label = { Text(text = "Gönderen" + "   " + "(${state.sender})") },
                 value = sender.value,
                 onValueChange = { sender.value = it })
             Spacer(modifier = Modifier.padding(15.dp))
             TextField(
-                label = { Text(text = "Metin" +"    "+ "(${state.body})") },
+                label = { Text(text = "Metin" + "    " + "(${state.body})") },
                 value = body.value,
                 onValueChange = { body.value = it })
+            Spacer(modifier = Modifier.height(15.dp))
+
             Button(onClick = {
                 if (body.value.isNotEmpty() && sender.value.isNotEmpty()) {
-                    val updateMessage = SmsMessageModel(sender = sender.value, body = body.value)
-                    viewModel.updateMessage(updateMessage)
+                    viewModel.updateMessage(sender.value, body.value, uuid)
                     navController.popBackStack()
                 }
-            }) {
-                Text(text = "Güncelle")
+            }, colors = ButtonDefaults.buttonColors(containerColor = Color.White)) {
+                Text(text = "Güncelle", color = Color.Black)
             }
 
         }

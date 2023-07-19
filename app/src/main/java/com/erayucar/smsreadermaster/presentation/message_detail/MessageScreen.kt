@@ -1,8 +1,6 @@
 package com.erayucar.smsreadermaster.presentation.message_detail
 
 import android.app.Application
-import android.widget.EditText
-import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,14 +9,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -32,6 +33,7 @@ fun MessageScreen(
     navController: NavController
 ) {
 
+
     val sender = remember {
         mutableStateOf("")
     }
@@ -39,7 +41,10 @@ fun MessageScreen(
         mutableStateOf("")
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -47,26 +52,33 @@ fun MessageScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            TextField(label = { Text(text = "Gönderen")}, value = sender.value, onValueChange ={
+            TextField(label = { Text(text = "Gönderen") }, value = sender.value, onValueChange = {
                 sender.value = it
-            })
+            }, colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White))
             Spacer(modifier = Modifier.padding(15.dp))
-            TextField(label = { Text(text = "Mesaj")}, value = body.value, onValueChange ={
+            TextField(label = { Text(text = "Mesaj") }, value = body.value, onValueChange = {
                 body.value = it
-            })
+            }, colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White))
+            Spacer(modifier = Modifier.padding(15.dp))
+            Button(
+                onClick = {
+                    val isEmpty = sender.value.isEmpty() || body.value.isEmpty()
+                    if (!isEmpty) {
+                        viewModel.insertMessage(sender.value, body.value)
+                        navController.popBackStack()
 
-            Button(onClick = {
-                val isEmpty = sender.value.isEmpty() || body.value.isEmpty()
-                if (!isEmpty){
-                    viewModel.insertMessage(sender.value, body.value)
-                    navController.popBackStack()
 
+                    } else {
+                        Toast.makeText(
+                            app.applicationContext,
+                            "Alanlar Boş Olamaz!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }, colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+            ) {
+                Text(text = "Kaydet", color = Color.Black)
 
-                }else{
-                    Toast.makeText(app.applicationContext, "Alanlar Boş Olamaz!", Toast.LENGTH_SHORT).show()
-                }
-            }) {
-                Text(text = "Kaydet")
             }
 
 

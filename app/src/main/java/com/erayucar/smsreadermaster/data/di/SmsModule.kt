@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class SmsModule {
 
-     @Binds
-     @Singleton
-     abstract fun bindSmsRepository(smsRepository: DefaultSmsTracker): SmsTracker
+    @Binds
+    @Singleton
+    abstract fun bindSmsRepository(smsRepository: DefaultSmsTracker): SmsTracker
 }

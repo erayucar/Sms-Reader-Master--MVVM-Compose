@@ -6,17 +6,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.erayucar.smsreadermaster.common.Resource
 import com.erayucar.smsreadermaster.domain.message.SmsTracker
 import com.erayucar.smsreadermaster.domain.model.MessageModel
 import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import com.erayucar.smsreadermaster.domain.repository.DbRepository
 import com.erayucar.smsreadermaster.presentation.message_list.MessageListState
 import com.erayucar.smsreadermaster.presentation.use_case.MessageUseCase
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -58,29 +54,12 @@ class SmsViewModel @Inject constructor(
                         // post request with retrofit
                         val postMessage = MessageModel("**" + smsText.sender + "**" + smsText.body)
 
-
-
-                         messageUseCase(postMessage).onEach {
-                        when (it) {
-                            is Resource.Success -> {
-                                Toast.makeText(application.applicationContext, "Mesaj gönderildi", Toast.LENGTH_SHORT).show()
-                            }
-                            is Resource.Error -> {
-                                _messageState.value = MessageListState(error = it.message!!)
-                            }
-                            is Resource.Loading -> {
-                            }
-                        }
-                    }.launchIn(viewModelScope)
-
-
+                        messageUseCase(postMessage)
                     } else {
-
                     }
                 }
             }
             loadMessage()
-
         }
     }
 
@@ -104,11 +83,17 @@ class SmsViewModel @Inject constructor(
         }
     }
 
-    fun updateMessage(messageModel: SmsMessageModel) {
+    fun updateMessage(sender: String, body: String, uuid: Int) {
         viewModelScope.launch {
             _messageState.value = MessageListState(isLoading = true)
 
-            dbRepository.updateMessage(messageModel)
+            dbRepository.updateMessage(sender, body, uuid)
+            Toast.makeText(
+                application.applicationContext,
+                "Başarıyla Güncellendi",
+                Toast.LENGTH_SHORT
+            ).show()
+
 
         }
     }
