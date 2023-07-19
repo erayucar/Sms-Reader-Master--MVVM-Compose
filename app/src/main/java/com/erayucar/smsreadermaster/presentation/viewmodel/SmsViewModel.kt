@@ -30,10 +30,13 @@ class SmsViewModel @Inject constructor(
     private val _updateMessage = mutableStateOf(MessageModel())
     val updateMessage: State<MessageModel> = _updateMessage
 
+    init {
+        loadMessage()
+    }
+
 
     fun loadMessage() {
         viewModelScope.launch {
-            _messageState.value = MessageListState(isLoading = true)
 
             smsTracker.receiveMessage()?.let { smsText ->
                 dbRepository.getAllMessages().forEach() { value ->
@@ -72,6 +75,8 @@ class SmsViewModel @Inject constructor(
                     }
                 }
             }
+            loadMessage()
+
         }
     }
 

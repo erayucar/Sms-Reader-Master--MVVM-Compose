@@ -48,8 +48,8 @@ class DefaultSmsTracker @Inject constructor(
 
         }
 
+
         return suspendCancellableCoroutine { cont ->
-            var resumed = false
             val br = object : BroadcastReceiver() {
                 override fun onReceive(p0: Context?, p1: Intent?) {
                     if (p1 != null && Telephony.Sms.Intents.SMS_RECEIVED_ACTION == p1.action) {
@@ -58,9 +58,9 @@ class DefaultSmsTracker @Inject constructor(
                             val timestamp = Timestamp(sms.timestampMillis)
                             val from = sms.originatingAddress
                             val message = MessageModel(from!!, text)
-                            if (!resumed) {
-                                cont.resume(message)
-                                resumed = true}
+                            p0?.unregisterReceiver(this)
+                            cont.resume(message)
+
                         }
                     } else {
                         // Handle other intents
@@ -71,6 +71,7 @@ class DefaultSmsTracker @Inject constructor(
                 }
 
             }
+
 
             registerReceiver(
                 application,

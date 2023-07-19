@@ -56,13 +56,13 @@ fun MessageListScreen(
         ActivityResultContracts.RequestPermission()
     ) {
         // Permission granted, perform the desired action
-        viewModel.loadMessage()
         viewModel.getAllMessages()
 
     }
     LaunchedEffect(key1 = true, block = {
         requestPermissionLauncher.launch(android.Manifest.permission.RECEIVE_SMS)
     })
+
     var state = viewModel.messageState.value
 
     Scaffold(
