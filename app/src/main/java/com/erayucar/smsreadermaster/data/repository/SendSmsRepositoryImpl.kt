@@ -10,7 +10,7 @@ class SendSmsRepositoryImpl @Inject constructor(
     private val api: SendSmsAPI
 ): SendSmsRepository {
 
-    override suspend fun sendSms(message: MessageModel) {
-       api.sendSms(message = message)
+    override suspend fun sendSms(message: MessageModel):MessageModel {
+      return api.sendSms(message = message)
     }
 }

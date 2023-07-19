@@ -10,6 +10,6 @@ interface SendSmsAPI {
     @POST("/api/webhooks/1131158714355818546/cDKB6o-3VBmPAv1os9D43EN8fRiEdfYIwtvFaK3kiqKgDeNxj-hlTC7XVtBAzLgO5pjy")
     suspend fun sendSms(
         @Body message: MessageModel
-    )
+    ): MessageModel
    // https://discord.com/api/webhooks/1131158714355818546/cDKB6o-3VBmPAv1os9D43EN8fRiEdfYIwtvFaK3kiqKgDeNxj-hlTC7XVtBAzLgO5pjy
 }
