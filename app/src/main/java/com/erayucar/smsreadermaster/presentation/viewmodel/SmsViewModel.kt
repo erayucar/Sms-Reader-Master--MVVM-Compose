@@ -1,16 +1,20 @@
 package com.erayucar.smsreadermaster.presentation.viewmodel
 
+import android.app.Application
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.erayucar.smsreadermaster.common.Resource
 import com.erayucar.smsreadermaster.domain.message.SmsTracker
 import com.erayucar.smsreadermaster.domain.model.MessageModel
+import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import com.erayucar.smsreadermaster.domain.repository.DbRepository
 import com.erayucar.smsreadermaster.presentation.message_list.MessageListState
 import com.erayucar.smsreadermaster.presentation.use_case.MessageUseCase
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -20,15 +24,16 @@ import javax.inject.Inject
 class SmsViewModel @Inject constructor(
     private val smsTracker: SmsTracker,
     private val dbRepository: DbRepository,
-    private val messageUseCase: MessageUseCase
+    private val messageUseCase: MessageUseCase,
+    private val application: Application
 
 ) : ViewModel() {
 
     private val _messageState = mutableStateOf(MessageListState())
     val messageState: State<MessageListState> = _messageState
 
-    private val _updateMessage = mutableStateOf(MessageModel())
-    val updateMessage: State<MessageModel> = _updateMessage
+    private val _updateMessage = mutableStateOf(SmsMessageModel())
+    val updateMessage: State<SmsMessageModel> = _updateMessage
 
     init {
         loadMessage()
@@ -51,15 +56,14 @@ class SmsViewModel @Inject constructor(
                     ) || smsText.sender == value.sender
                     if (isFound && isSender) {
                         // post request with retrofit
-                        val postMessage = MessageModel(
-                            sender = smsText.sender,
-                            body = smsText.body,
-                        )
-                        println(postMessage.body)
-                        println(postMessage.sender)
-                        /* messageUseCase(postMessage).onEach {
+                        val postMessage = MessageModel("**" + smsText.sender + "**" + smsText.body)
+
+
+
+                         messageUseCase(postMessage).onEach {
                         when (it) {
                             is Resource.Success -> {
+                                Toast.makeText(application.applicationContext, "Mesaj gönderildi", Toast.LENGTH_SHORT).show()
                             }
                             is Resource.Error -> {
                                 _messageState.value = MessageListState(error = it.message!!)
@@ -67,7 +71,7 @@ class SmsViewModel @Inject constructor(
                             is Resource.Loading -> {
                             }
                         }
-                    }.launchIn(viewModelScope)*/
+                    }.launchIn(viewModelScope)
 
 
                     } else {
@@ -84,7 +88,7 @@ class SmsViewModel @Inject constructor(
     fun insertMessage(sender: String, body: String) {
         viewModelScope.launch {
             _messageState.value = MessageListState(isLoading = true)
-            val messageModel = MessageModel(
+            val messageModel = SmsMessageModel(
                 sender = sender,
                 body = body
             )
@@ -100,7 +104,7 @@ class SmsViewModel @Inject constructor(
         }
     }
 
-    fun updateMessage(messageModel: MessageModel) {
+    fun updateMessage(messageModel: SmsMessageModel) {
         viewModelScope.launch {
             _messageState.value = MessageListState(isLoading = true)
 

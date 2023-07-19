@@ -1,16 +1,9 @@
 package com.erayucar.smsreadermaster.domain.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.google.gson.JsonObject
+import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "message")
-data class MessageModel(
-    @ColumnInfo(name = "sender")
-    val sender: String = "",
-    @ColumnInfo(name = "body")
-    val body: String = "",
-) {
-    @PrimaryKey(autoGenerate = true)
-    var uuid: Int = 0
-}
+data class MessageModel (
+    @SerializedName("content")
+    val message: String? = null
+        )

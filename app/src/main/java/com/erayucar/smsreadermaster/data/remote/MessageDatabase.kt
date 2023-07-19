@@ -1,12 +1,10 @@
 package com.erayucar.smsreadermaster.data.remote
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.erayucar.smsreadermaster.domain.model.MessageModel
+import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 
-@Database(entities = [MessageModel::class], version = 1)
+@Database(entities = [SmsMessageModel::class], version = 1)
 abstract class MessageDatabase : RoomDatabase() {
 
     abstract fun messageDao(): MessageDao

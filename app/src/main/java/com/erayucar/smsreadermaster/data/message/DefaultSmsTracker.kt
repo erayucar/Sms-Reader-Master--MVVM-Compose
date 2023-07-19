@@ -9,22 +9,12 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.provider.Telephony
 import android.widget.Toast
-import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
-import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
 import androidx.core.content.ContextCompat.registerReceiver
 import com.erayucar.smsreadermaster.domain.message.SmsTracker
-import com.erayucar.smsreadermaster.domain.model.MessageModel
+import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ChannelResult
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.sql.Timestamp
 import javax.inject.Inject
@@ -34,7 +24,7 @@ import kotlin.coroutines.resume
 class DefaultSmsTracker @Inject constructor(
     private val application: Application,
 ) : SmsTracker {
-    override suspend fun receiveMessage(): MessageModel? {
+    override suspend fun receiveMessage(): SmsMessageModel? {
         val hasSmsRecieverPermission = ContextCompat.checkSelfPermission(
             application, Manifest.permission.RECEIVE_SMS
         ) == PackageManager.PERMISSION_GRANTED
@@ -57,7 +47,7 @@ class DefaultSmsTracker @Inject constructor(
                             val text = sms.displayMessageBody
                             val timestamp = Timestamp(sms.timestampMillis)
                             val from = sms.originatingAddress
-                            val message = MessageModel(from!!, text)
+                            val message = SmsMessageModel(from!!, text)
                             p0?.unregisterReceiver(this)
                             cont.resume(message)
 

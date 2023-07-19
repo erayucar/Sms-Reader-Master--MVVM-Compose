@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.erayucar.smsreadermaster.domain.model.MessageModel
+import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import com.erayucar.smsreadermaster.presentation.viewmodel.SmsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,7 +67,7 @@ fun UpdateScreen(
                 onValueChange = { body.value = it })
             Button(onClick = {
                 if (body.value.isNotEmpty() && sender.value.isNotEmpty()) {
-                    val updateMessage = MessageModel(sender = sender.value, body = body.value)
+                    val updateMessage = SmsMessageModel(sender = sender.value, body = body.value)
                     viewModel.updateMessage(updateMessage)
                     navController.popBackStack()
                 }

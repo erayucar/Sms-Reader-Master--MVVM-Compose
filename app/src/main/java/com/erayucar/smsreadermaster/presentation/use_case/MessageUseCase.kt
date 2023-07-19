@@ -2,6 +2,7 @@ package com.erayucar.smsreadermaster.presentation.use_case
 
 import com.erayucar.smsreadermaster.common.Resource
 import com.erayucar.smsreadermaster.domain.model.MessageModel
+import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import com.erayucar.smsreadermaster.domain.repository.SendSmsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
