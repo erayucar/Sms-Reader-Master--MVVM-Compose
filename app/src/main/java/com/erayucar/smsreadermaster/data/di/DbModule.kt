@@ -2,7 +2,7 @@ package com.erayucar.smsreadermaster.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.erayucar.smsreadermaster.data.remote.MessageDatabase
+import com.erayucar.smsreadermaster.data.remote.roomdb.MessageDatabase
 import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import dagger.Module
 import dagger.Provides

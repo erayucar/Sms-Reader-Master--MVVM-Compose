@@ -1,7 +1,5 @@
 package com.erayucar.smsreadermaster.presentation.viewmodel
 
-import android.app.Application
-import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,7 +9,7 @@ import com.erayucar.smsreadermaster.domain.model.MessageModel
 import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import com.erayucar.smsreadermaster.domain.repository.DbRepository
 import com.erayucar.smsreadermaster.presentation.message_list.MessageListState
-import com.erayucar.smsreadermaster.presentation.use_case.MessageUseCase
+import com.erayucar.smsreadermaster.presentation.use_case.IMessageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,8 +18,7 @@ import javax.inject.Inject
 class SmsViewModel @Inject constructor(
     private val smsTracker: SmsTracker,
     private val dbRepository: DbRepository,
-    private val messageUseCase: MessageUseCase,
-    private val application: Application
+    private val messageUseCase: IMessageUseCase,
 
 ) : ViewModel() {
 
@@ -36,7 +33,7 @@ class SmsViewModel @Inject constructor(
     }
 
 
-    fun loadMessage() {
+    private fun loadMessage() {
         viewModelScope.launch {
 
             smsTracker.receiveMessage()?.let { smsText ->
@@ -52,10 +49,9 @@ class SmsViewModel @Inject constructor(
                     ) || smsText.sender == value.sender
                     if (isFound && isSender) {
                         // post request with retrofit
-                        val postMessage = MessageModel("**" + smsText.sender + "**" + smsText.body)
+                        val postMessage = MessageModel("---" + smsText.sender + "---" + smsText.body)
 
-                        messageUseCase(postMessage)
-                    } else {
+                        messageUseCase.postMessage(postMessage)
                     }
                 }
             }
@@ -88,11 +84,7 @@ class SmsViewModel @Inject constructor(
             _messageState.value = MessageListState(isLoading = true)
 
             dbRepository.updateMessage(sender, body, uuid)
-            Toast.makeText(
-                application.applicationContext,
-                "Başarıyla Güncellendi",
-                Toast.LENGTH_SHORT
-            ).show()
+
 
 
         }
@@ -100,6 +92,7 @@ class SmsViewModel @Inject constructor(
 
     fun getAllMessages() {
         viewModelScope.launch {
+            _messageState.value = MessageListState(isLoading = true)
             _messageState.value = MessageListState(messages = dbRepository.getAllMessages())
 
         }

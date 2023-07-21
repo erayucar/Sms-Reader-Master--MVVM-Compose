@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                 val gradientVertically = Brush.verticalGradient(
 
                     startY = 0.3f,
-                    colors = listOf(Color(0x657012CE), Color(0xFF000000))
+                    colors = listOf(Color(0xFF0D1B68), Color(0xFF389CEC))
                 )
                 // A surface container using the 'background' color from the theme
                 Box(

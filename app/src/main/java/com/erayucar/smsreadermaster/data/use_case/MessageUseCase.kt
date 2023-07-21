@@ -1,25 +1,25 @@
-package com.erayucar.smsreadermaster.presentation.use_case
+package com.erayucar.smsreadermaster.data.use_case
 
-import android.app.Application
 import android.util.Log
 import com.erayucar.smsreadermaster.domain.model.MessageModel
-import com.erayucar.smsreadermaster.domain.repository.SendSmsRepository
+import com.erayucar.smsreadermaster.domain.repository.PostMessageRepository
+import com.erayucar.smsreadermaster.presentation.use_case.IMessageUseCase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
 class MessageUseCase @Inject constructor(
-    private val repository: SendSmsRepository,
-    private val application: Application
-) {
+    private val repository: PostMessageRepository,
+) : IMessageUseCase {
 
-    operator suspend fun invoke(message: MessageModel) {
+    override suspend fun postMessage(message: MessageModel) {
         try {
-            val call = repository.sendSms(message)
+            val call = repository.postMessage(message)
             call.enqueue(object : Callback<Unit> {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful) {
+                        Log.e("TAG", "onResponse: ${response.body()}")
                     }
                 }
 
@@ -29,8 +29,6 @@ class MessageUseCase @Inject constructor(
         } catch (e: Exception) {
             Log.e("TAG", e.localizedMessage!!)
         }
-
-
     }
 }
 

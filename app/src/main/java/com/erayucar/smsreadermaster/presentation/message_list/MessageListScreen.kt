@@ -71,19 +71,18 @@ fun MessageListScreen(
     LaunchedEffect(key1 = true, block = {
         requestPermissionLauncher.launch(android.Manifest.permission.RECEIVE_SMS)
     })
-
-    var state = viewModel.messageState.value
+    val state = viewModel.messageState.value
     val gradientVertically = Brush.verticalGradient(
 
         startY = 0.3f,
-        colors = listOf(Color(0x657012CE), Color(0xFF000000))
+        colors = listOf(Color(0xFF0D1B68), Color(0xFF389CEC))
     )
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 navController.navigate(Screen.messageScreen.route)
-            }, containerColor = Color(0xFFB894F0)) {
+            }, containerColor = Color(0xFFFFFFFF)) {
                 Image(
                     painter = painterResource(id = R.drawable.baseline_add_24),
                     contentDescription = null
@@ -181,7 +180,7 @@ fun MesageListItem(
                 DropdownMenuItem(onClick = {
                     navController.navigate(Screen.updateScreen.route + "/" + message.uuid.toString())
 
-                }, text = { Text(text = "Düzenle") })
+                }, text = { Text(color = Color(0xFF0D1B68), text = "Düzenle") })
 
                 // Creating dropdown menu item, on click
                 // would create a Toast message
@@ -194,7 +193,7 @@ fun MesageListItem(
                             Toast.LENGTH_SHORT
                         ).show()
                     },
-                    text = { Text(text = "Sil") })
+                    text = { Text(color = Color(0xFF0D1B68), text = "Sil") })
             }
         }
 

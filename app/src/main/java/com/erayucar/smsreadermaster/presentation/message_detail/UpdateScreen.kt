@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erayucar.smsreadermaster.presentation.viewmodel.SmsViewModel
+import com.erayucar.smsreadermaster.ui.theme.Blue
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +52,8 @@ fun UpdateScreen(
 
     })
 
+    var showDialog = remember { mutableStateOf(false) }
+
 
 
 
@@ -58,13 +65,23 @@ fun UpdateScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextField(
-                label = { Text(text = "Gönderen" + "   " + "(${state.sender})") },
+            TextField(colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
+                label = {
+                    Text(
+                        color = Blue,
+                        text = "Gönderen" + "   " + "(${state.sender})"
+                    )
+                },
                 value = sender.value,
                 onValueChange = { sender.value = it })
             Spacer(modifier = Modifier.padding(15.dp))
-            TextField(
-                label = { Text(text = "Metin" + "    " + "(${state.body})") },
+            TextField(colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
+                label = {
+                    Text(
+                        color = Blue,
+                        text = "Metin" + "    " + "(${state.body})"
+                    )
+                },
                 value = body.value,
                 onValueChange = { body.value = it })
             Spacer(modifier = Modifier.height(15.dp))
@@ -73,9 +90,24 @@ fun UpdateScreen(
                 if (body.value.isNotEmpty() && sender.value.isNotEmpty()) {
                     viewModel.updateMessage(sender.value, body.value, uuid)
                     navController.popBackStack()
+                } else {
+                    showDialog.value = true
+                    //Toast.makeText(application,"Lütfen alanları doldurunuz",Toast.LENGTH_SHORT).show()
                 }
             }, colors = ButtonDefaults.buttonColors(containerColor = Color.White)) {
-                Text(text = "Güncelle", color = Color.Black)
+                Text(text = "Güncelle", color = Blue)//Color(0xFF0D1B68))
+            }
+
+            if (showDialog.value) {
+                AlertDialog(onDismissRequest = { showDialog.value = false },
+                    confirmButton = {
+                        TextButton(onClick = { showDialog.value = false }) {
+                            Text(text = "Tamam")
+                        }
+                    },
+                    text = {
+                        Text(text = "Lütfen alanları doldurunuz")
+                    })
             }
 
         }

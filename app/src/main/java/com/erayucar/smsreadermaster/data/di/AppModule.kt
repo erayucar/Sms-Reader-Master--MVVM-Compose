@@ -1,12 +1,14 @@
 package com.erayucar.smsreadermaster.data.di
 
 import android.app.Application
-import com.erayucar.smsreadermaster.data.remote.MessageDao
-import com.erayucar.smsreadermaster.data.remote.SendSmsAPI
+import com.erayucar.smsreadermaster.data.remote.roomdb.MessageDao
+import com.erayucar.smsreadermaster.data.remote.PostMessageAPI
 import com.erayucar.smsreadermaster.data.repository.DbRepositoryImp
-import com.erayucar.smsreadermaster.data.repository.SendSmsRepositoryImpl
+import com.erayucar.smsreadermaster.data.repository.PostMessageRepositoryImpl
 import com.erayucar.smsreadermaster.domain.repository.DbRepository
-import com.erayucar.smsreadermaster.domain.repository.SendSmsRepository
+import com.erayucar.smsreadermaster.domain.repository.PostMessageRepository
+import com.erayucar.smsreadermaster.presentation.use_case.IMessageUseCase
+import com.erayucar.smsreadermaster.data.use_case.MessageUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +31,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWeatherAPI(application: Application): SendSmsAPI {
+    fun provideMessageUseCase(postMessageRepository: PostMessageRepository): IMessageUseCase {
+        return MessageUseCase(postMessageRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherAPI(application: Application): PostMessageAPI {
         val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
@@ -39,12 +47,12 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
-            .create(SendSmsAPI::class.java)
+            .create(PostMessageAPI::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideSendSmsRepository(api: SendSmsAPI): SendSmsRepository {
-        return SendSmsRepositoryImpl(api = api)
+    fun provideSendSmsRepository(api: PostMessageAPI): PostMessageRepository {
+        return PostMessageRepositoryImpl(api = api)
     }
 }

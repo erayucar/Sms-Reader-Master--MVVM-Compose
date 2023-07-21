@@ -1,4 +1,4 @@
-package com.erayucar.smsreadermaster.data.remote
+package com.erayucar.smsreadermaster.data.remote.roomdb
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

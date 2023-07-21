@@ -1,6 +1,6 @@
 package com.erayucar.smsreadermaster.data.repository
 
-import com.erayucar.smsreadermaster.data.remote.MessageDao
+import com.erayucar.smsreadermaster.data.remote.roomdb.MessageDao
 import com.erayucar.smsreadermaster.domain.model.SmsMessageModel
 import com.erayucar.smsreadermaster.domain.repository.DbRepository
 import javax.inject.Inject
