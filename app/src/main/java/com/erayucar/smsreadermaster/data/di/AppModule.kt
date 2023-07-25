@@ -37,7 +37,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWeatherAPI(application: Application): PostMessageAPI {
+    fun provideWeatherAPI(): PostMessageAPI {
         val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
@@ -55,4 +55,5 @@ object AppModule {
     fun provideSendSmsRepository(api: PostMessageAPI): PostMessageRepository {
         return PostMessageRepositoryImpl(api = api)
     }
+
 }

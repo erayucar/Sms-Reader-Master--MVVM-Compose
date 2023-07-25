@@ -2,6 +2,8 @@ package com.erayucar.smsreadermaster.presentation.message_list
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,6 +48,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erayucar.smsreadermaster.R
@@ -59,7 +63,7 @@ import com.erayucar.smsreadermaster.presentation.viewmodel.SmsViewModel
 fun MessageListScreen(
     viewModel: SmsViewModel = hiltViewModel(),
     navController: NavController,
-    application: Application
+    application: Application,
 ) {
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -179,6 +183,7 @@ fun MesageListItem(
                 // would create a Toast message
                 DropdownMenuItem(onClick = {
                     navController.navigate(Screen.updateScreen.route + "/" + message.uuid.toString())
+                    mDisplayMenu.value = false
 
                 }, text = { Text(color = Color(0xFF0D1B68), text = "Düzenle") })
 
@@ -192,6 +197,7 @@ fun MesageListItem(
                             "Mesaj silindi",
                             Toast.LENGTH_SHORT
                         ).show()
+                        mDisplayMenu.value = false
                     },
                     text = { Text(color = Color(0xFF0D1B68), text = "Sil") })
             }

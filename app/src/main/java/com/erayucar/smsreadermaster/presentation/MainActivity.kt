@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.erayucar.smsreadermaster.data.message.DefaultSmsTracker
 import com.erayucar.smsreadermaster.presentation.message_detail.MessageScreen
 import com.erayucar.smsreadermaster.presentation.message_detail.UpdateScreen
 import com.erayucar.smsreadermaster.presentation.message_list.MessageListScreen
@@ -23,7 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.messageListScreen.route) {
                             MessageListScreen(
                                 navController = navController,
-                                application = application
+                                application = application,
                             )
                         }
                         composable(Screen.messageScreen.route) {
@@ -82,4 +82,5 @@ class MainActivity : ComponentActivity() {
 
 
     }
+
 }

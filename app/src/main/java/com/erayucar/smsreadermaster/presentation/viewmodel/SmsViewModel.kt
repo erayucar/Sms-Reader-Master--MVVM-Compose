@@ -1,5 +1,6 @@
 package com.erayucar.smsreadermaster.presentation.viewmodel
 
+import android.content.BroadcastReceiver
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,11 @@ import com.erayucar.smsreadermaster.domain.repository.DbRepository
 import com.erayucar.smsreadermaster.presentation.message_list.MessageListState
 import com.erayucar.smsreadermaster.presentation.use_case.IMessageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,8 +26,7 @@ class SmsViewModel @Inject constructor(
     private val dbRepository: DbRepository,
     private val messageUseCase: IMessageUseCase,
 
-) : ViewModel() {
-
+) : ViewModel(){
     private val _messageState = mutableStateOf(MessageListState())
     val messageState: State<MessageListState> = _messageState
 
@@ -29,14 +34,21 @@ class SmsViewModel @Inject constructor(
     val updateMessage: State<SmsMessageModel> = _updateMessage
 
     init {
+        viewModelScope.launch{
+             smsTracker.receiveMessage().collect{
+                print(it.body)
+            }
+
+        }
+
         loadMessage()
     }
 
 
-    private fun loadMessage() {
-        viewModelScope.launch {
+     fun loadMessage() {
 
-            smsTracker.receiveMessage()?.let { smsText ->
+        viewModelScope.launch {
+      smsTracker.receiveMessage().collect { smsText ->
                 dbRepository.getAllMessages().forEach() { value ->
 
                     val isFound = smsText.body.contains(
@@ -55,7 +67,7 @@ class SmsViewModel @Inject constructor(
                     }
                 }
             }
-            loadMessage()
+
         }
     }
 
@@ -108,4 +120,5 @@ class SmsViewModel @Inject constructor(
 
 
     }
+
 }
